@@ -2,9 +2,11 @@ import React, {useState} from 'react';
 import { Form, Button, Input, Message, Container } from "semantic-ui-react";
 import factory from "../../Ethereum/factory.js";
 import web3 from "../../Ethereum/web3.js";
+import Navbar from '../../components/navbar';
 
 const newCampaign = () => {
     
+    const [loading, setLoading] = useState(false); 
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
     const [funds, setFunds] = useState("");
@@ -12,21 +14,27 @@ const newCampaign = () => {
 
     const createCampaign = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
-
             const accounts = await web3.eth.getAccounts();
             await factory.methods.createCampaign(web3.utils.toWei(minContribution, "ether"), projectName, projectDescription, funds).send({
                 from: accounts[0],
             });
-      
-          } catch (err) {
-            console.log(err);
-          }
+        } catch (err) {
+          console.log(err);
+        }
+
+        setLoading(false);
+        setProjectName("");
+        setProjectDescription("");
+        setFunds("");
+        setMinContribution("");
     }
     
     return (
-        
-        <Container >
+      <>
+      <Navbar />
+      <Container >
         <h3>Create Campaign</h3>
         <Form onSubmit = {createCampaign}>
           <Form.Field>
@@ -65,12 +73,12 @@ const newCampaign = () => {
             />
           </Form.Field>
           <Message error header="Oops!" />
-          <Button loading={false} primary>
+          <Button loading={loading} primary>
             Create!
           </Button>
         </Form>
-        
-        </Container>
+      </Container>
+      </>
     );
 }
 

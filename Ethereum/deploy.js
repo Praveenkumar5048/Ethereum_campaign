@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const compiledFactory = require("./build/CampaignFactory.json");
  
-const provider = new HDWalletProvider( process.env.PNEMONIC, process.env.API);
+const provider = new HDWalletProvider( NEXT_PUBLIC_process.env.PNEMONIC, NEXT_PUBLIC_process.env.API);
 
 const web3 = new Web3(provider);
  
